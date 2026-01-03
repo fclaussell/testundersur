@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Void Ascension</title>
+
+<style>
+:root{
+  --bg:#07070a;
+  --panel:rgba(12,12,16,.82);
+  --stroke:rgba(255,255,255,.08);
+  --text:#ffffff;
+  --muted:rgba(255,255,255,.6);
+  --accent:#3ad0ff;
+  --danger:#e53935;
+  --radius:12px;
+  --shadow:0 30px 80px rgba(0,0,0,.75);
+     /* NUEVOS COLORES */
+  --green-accent:#2ecc71;   /* verde vivo */
+  --purple-accent:#8e44ad;  /* morado oscuro */
+}
+
+/* RESET */
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+body{overflow-x:hidden}
+
+/* BACKDROP */
+.backdrop{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  background:
+    radial-gradient(1200px 700px at 30% 10%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,255,255,.05), transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.92)),
+    url("assets/bg.jpg") center/cover no-repeat;
+}
+
+/* CONTAINER */
+.shell{
+  max-width:980px;
+  margin:26px auto 70px;
+  border-radius:var(--radius);
+  background:linear-gradient(to bottom, rgba(10,10,14,.65), rgba(10,10,14,.92));
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  border:1px solid var(--stroke);
+}
+
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 18px;
+  background:rgba(0,0,0,.65);
+  border-bottom:1px solid var(--stroke);
+}
+.topbar nav a{
+  color:var(--muted);
+  text-decoration:none;
+  margin-right:16px;
+  font-size:12px;
+  letter-spacing:.14em;
+}
+.topbar nav a:hover{color:#fff}
+
+/* BRAND BAR (LOGO) */
+.brandbar{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:18px 0;
+  background:linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.4));
+  border-bottom:1px solid var(--stroke);
+}
+.brandbar img{
+  width:86px;
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,.9));
+}
+
+/* LOGO PULSE */
+@keyframes logoPulse {
+  0%   {transform:scale(.85); filter:blur(6px); opacity:.4;}
+  40%  {transform:scale(1.15); filter:blur(2px); opacity:.85;}
+  70%  {transform:scale(.98); filter:blur(0); opacity:1;}
+  100% {transform:scale(1); filter:blur(0); opacity:1;}
+}
+.logo-animate{
+  animation:logoPulse 2.2s ease-in-out forwards;
+  will-change:transform,filter,opacity;
+  cursor:pointer;
+}
+
+/* HERO */
+.hero{
+  position:relative;
+  min-height:420px;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.85)),
+    url("assets/hero2.jpg") center/cover no-repeat;
+}
+.hero-inner{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;   /* 👈 clave */
+  text-align:center;
+  padding:40px 16px 60px;     /* más aire abajo */
+}
+
+.hero-nav{
+  display:flex;
+  gap:18px;
+  font-size:12px;
+  letter-spacing:.16em;
+  margin-bottom:16px;
+}
+.hero-nav a{
+  color:var(--muted);
+  text-decoration:none;
+}
+.hero-nav a:hover{color:#fff}
+.hero h1{
+  margin:0 0 18px;
+  font-size:clamp(36px,4.2vw,60px);
+  letter-spacing:.06em;
+}
+.hero-buttons{
+  margin-top:16px;
+}
+
+/* BUTTONS */
+.btn{
+  padding:12px 20px;
+  border-radius:12px;
+  font-size:12px;
+  letter-spacing:.1em;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  cursor:pointer;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.btn.primary{background:rgba(58,208,255,.22); border-color:rgba(58,208,255,.45)}
+.btn.danger{  background:rgba(142,68,173,.22);
+  border-color:rgba(142,68,173,.45);}
+.btn:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.8)}
+
+/* CONTENT */
+.content{padding:18px}
+.section-title{
+  font-size:12px;
+  letter-spacing:.18em;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin:16px 0 10px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.section-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--stroke);
+}
+
+/* PRESS KIT (EDITORIAL) */
+.presskit{
+  margin:18px 0 10px;
+}
+.presskit-inner{
+  background:linear-gradient(to bottom, rgba(14,14,18,.85), rgba(10,10,14,.95));
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:0 25px 60px rgba(0,0,0,.6);
+}
+.presskit h2{
+  margin:0 0 8px;
+  font-size:20px;
+  letter-spacing:.12em;
+}
+.presskit p{
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.presskit-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.presskit-actions .btn{
+  width:100%;
+}
+
+/* GRID / CARDS */
+.grid{display:grid; grid-template-columns:1.2fr .8fr; gap:16px}
+.card{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:16px;
+  border:1px solid var(--stroke);
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.card:hover{transform:translateY(-3px); box-shadow:0 25px 50px rgba(0,0,0,.85)}
+
+/* MEDIA GRID */
+.media-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.media-item{
+  aspect-ratio:1/1;
+  overflow:hidden;
+  border-radius:10px;
+  border:1px solid var(--stroke);
+  background:#000;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.media-item img{
+  width:100%; height:100%;
+  object-fit:cover;
+  transition:transform .5s ease, filter .35s ease;
+}
+.media-item:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 0 1px rgba(58,208,255,.25), 0 20px 40px rgba(0,0,0,.9);
+}
+.media-item:hover img{transform:scale(1.08); filter:brightness(1.15)}
+
+/* LOWER */
+.lower{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px}
+.tour{list-style:none; padding:0; margin:0}
+.tour li{
+  padding:10px 0;
+  border-top:1px solid var(--stroke);
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--muted);
+}
+.tour li:first-child{border-top:none}
+
+/* FOOTER */
+.footer{
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  background:rgba(0,0,0,.65);
+  border-top:1px solid var(--stroke);
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .grid,.lower{grid-template-columns:1fr}
+  .media-grid{grid-template-columns:1fr}
+  .presskit-actions{grid-template-columns:1fr 1fr}
+}
+    
+/* ============================= */
+/* PRESS KIT CAROUSEL (ISOLATED) */
+/* ============================= */
+
+.presskit-carousel{
+  position:relative;
+  margin-top:16px;
+  overflow:hidden;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:#000;
+}
+
+.carousel-track{
+  display:flex;
+  transition:transform .8s ease;
+}
+
+.carousel-slide{
+  min-width:100%;
+  aspect-ratio:16/9;
+}
+
+.carousel-slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* CONTROLS */
+.carousel-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  cursor:pointer;
+  z-index:5;
+}
+.carousel-btn.prev{left:12px}
+.carousel-btn.next{right:12px}
+
+/* DOTS */
+.carousel-dots{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:12px;
+}
+.carousel-dots button{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:1px solid var(--stroke);
+  background:transparent;
+  cursor:pointer;
+}
+.carousel-dots button.active{
+  background:var(--accent);
+}
+
+  /* =============================== */
+/* HERO VARIANT — ICON MODE (SAFE) */
+/* =============================== */
+
+.hero--icons .hero-buttons{
+  display:none;
+}
+
+/* contenedor iconos */
+.hero-actions--icons{
+  display:flex;
+  gap:32px;
+  margin-top:18px;
+  justify-content:center;
+}
+
+/* icon button */
+.hero-icon{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:18px 22px;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  text-decoration:none;
+  color:inherit;
+  transition:transform .3s ease, box-shadow .3s ease;
+  transition:
+    color .25s ease,
+    border-color .25s ease,
+    box-shadow .3s ease,
+    transform .3s ease;
+}
+
+.hero-icon svg{
+  width:34px;
+  height:34px;
+  fill:none;
+  stroke-width:1.6;
+}
+
+.hero-icon span{
+  font-size:11px;
+  letter-spacing:.14em;
+}
+
+/* LISTEN */
+.hero-icon--listen svg{
+  stroke:var(--green-accent);
+}
+.hero-icon--listen:hover{
+  transform:translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(46,204,113,.45),
+    0 18px 40px rgba(46,204,113,.25);
+}
+
+/* MERCH */
+.hero-icon--merch svg{
+  stroke:var(--purple-accent);
+}
+.hero-icon--merch:hover{
+  transform:translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(142,68,173,.45),
+    0 18px 40px rgba(142,68,173,.25);
+}
+  
+/* === FIX SVG ICON COLOR (CRÍTICO) === */
+.hero-icon svg *{
+  stroke: currentColor;
+}
+
+/* === COLORES DE ICONOS === */
+.hero-icon--listen{
+  color: var(--green-accent);
+}
+
+.hero-icon--merch{
+  color: var(--purple-accent);
+}
+/* === SVG VISIBILITY FIX === */
+.hero-icon svg path,
+.hero-icon svg rect,
+.hero-icon svg circle,
+.hero-icon svg line {
+  fill: none;
+  stroke: currentColor;
+}
+.hero-icon--merch{
+  color: var(--purple-accent);
+  border-color: rgba(142,68,173,.45);
+}
+.hero-icon--merch:hover{
+  color: #ffffff;               /* texto + icono */
+  border-color: #ffffff;        /* borde */
+}
+.hero-icon--merch:hover{
+  text-shadow: 0 0 6px rgba(255,255,255,.35);
+}
+
+  /* === MERCH PULSE INTRO === */
+@keyframes merchPulse {
+  0% {
+    color: var(--purple-accent);
+    border-color: rgba(142,68,173,.45);
+  }
+  40% {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  60% {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  100% {
+    color: var(--purple-accent);
+    border-color: rgba(142,68,173,.45);
+  }
+}
+.hero-icon--merch.is-intro{
+  animation: merchPulse 1.4s ease-out 0.6s 1;
+}
+
+  
+
+
+</style>
+</head>
+
+<body>
+
+<div class="backdrop"></div>
+
+<main class="shell">
+
+<header class="topbar">
+  <nav><a href="#">HOME</a><a href="#">BAND</a></nav>
+</header>
+
+<div class="brandbar">
+  <img src="assets/logo-mark.png" alt="Logo" id="brandLogo">
+</div>
+
+<section class="hero hero--icons">
+
+  <div class="hero-inner">
+    <div class="hero-nav">
+      <a>BAND</a><a>BIO</a><a>MUSIC</a><a>TOUR</a><a>CONTACT</a>
+    </div>
+    <h1>FUNERAL HOLOCAUST</h1>
+    <!-- VARIANTE HERO CON ICONOS -->
+<div class="hero-actions hero-actions--icons">
+
+  <a href="#music" class="hero-icon hero-icon--listen">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 13v-1a8 8 0 0 1 16 0v1"/>
+      <rect x="2" y="13" width="4" height="7" rx="2"/>
+      <rect x="18" y="13" width="4" height="7" rx="2"/>
+    </svg>
+    <span>LISTEN NOW</span>
+  </a>
+
+<a href="#merch" class="hero-icon hero-icon--merch is-intro">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 4l4-2 4 2 4-2 4 2-3 4v12H7V8z"></path>
+  </svg>
+  <span>MERCH/SHOP</span>
+</a>
+
+ 
+
+</div>
+
+    <div class="hero-buttons">
+      <button class="btn primary">LISTEN NOW</button>
+      <button class="btn danger">TOUR DATES</button>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  
+  
+    
+<!-- PRESS KIT CAROUSEL -->
+<div class="presskit-carousel" id="presskitCarousel">
+
+  <div class="carousel-track">
+    <div class="carousel-slide">
+      <img src="assets/presskit-1.png" alt="Press Kit page 1">
+    </div>
+    <div class="carousel-slide">
+      <img src="assets/presskit-2.png" alt="Press Kit page 2">
+    </div>
+    <div class="carousel-slide">
+      <img src="assets/presskit-3.png" alt="Press Kit page 3">
+    </div>
+    <div class="carousel-slide">
+      <img src="assets/presskit-4.png" alt="Press Kit page 4">
+    </div>
+    <div class="carousel-slide">
+      <img src="assets/presskit-5.png" alt="Press Kit page 5">
+    </div>
+  </div>
+
+  <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+  <button class="carousel-btn next" aria-label="Next slide">›</button>
+
+</div>
+
+<div class="carousel-dots" id="presskitDots"></div>
+    
+
+  <!-- PRESS KIT DEBAJO DEL HERO -->
+  <div class="presskit">
+    <div class="presskit-inner">
+      <h2>PRESS KIT</h2>
+      <p>
+        Material oficial para prensa, promotores y festivales.
+        Descarga EPK, logos, fotografías y rider técnico.
+      </p>
+      <div class="presskit-actions">
+        <button class="btn primary">DOWNLOAD EPK</button>
+        <button class="btn">LOGOS</button>
+        <button class="btn">PHOTOS</button>
+        <button class="btn">TECH RIDER</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Latest Music</div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="media-grid">
+        <div class="media-item"><img src="assets/cover1.jpg"></div>
+        <div class="media-item"><img src="assets/cover2.png"></div>
+        <div class="media-item"><img src="assets/cover3.png"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="font-size:13px;color:var(--muted)">
+        Nuevo material disponible. Próximas fechas y press kit.
+      </p>
+      <button class="btn primary" style="width:100%">PRESS KIT</button>
+    </div>
+  </div>
+
+  <div class="lower">
+    <div class="card">
+      <div class="section-title">Tour Dates</div>
+      <ul class="tour">
+        <li><span>Nov 15 · London</span><span>19:00</span></li>
+        <li><span>Nov 17 · Paris</span><span>20:00</span></li>
+        <li><span>Nov 23 · Eindhoven</span><span>21:00</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Merch</div>
+      <div class="media-grid">
+        <div class="media-item"><img src="assets/merch-shirt.png"></div>
+        <div class="media-item"><img src="assets/merch-poster.png"></div>
+        <div class="media-item"><img src="assets/merch-vinyl.png"></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer class="footer">
+  <span>© 2026 Underground_del_sur_mx</span>
+  <span>Extremme Community</span>
+</footer>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const logo = document.getElementById("brandLogo");
+  function triggerPulse(){
+    logo.classList.remove("logo-animate");
+    void logo.offsetWidth;
+    logo.classList.add("logo-animate");
+  }
+  triggerPulse();
+  if (window.matchMedia("(hover: hover)").matches) {
+    logo.addEventListener("click", triggerPulse);
+  }
+});
+    
+
+/* PRESS KIT CAROUSEL LOGIC */
+(function(){
+  const carousel = document.getElementById("presskitCarousel");
+  if(!carousel) return;
+
+  const track = carousel.querySelector(".carousel-track");
+  const slides = Array.from(track.children);
+  const dotsWrap = document.getElementById("presskitDots");
+  const prevBtn = carousel.querySelector(".prev");
+  const nextBtn = carousel.querySelector(".next");
+
+  let index = 0;
+  let interval;
+  const DELAY = 5000;
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement("button");
+    if(i === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => goTo(i, true));
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function update(){
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(d => d.classList.remove("active"));
+    dots[index].classList.add("active");
+  }
+
+  function goTo(i, manual){
+    index = (i + slides.length) % slides.length;
+    update();
+    if(manual) restart();
+  }
+
+  function next(){ goTo(index + 1); }
+  function prev(){ goTo(index - 1); }
+
+  function start(){ interval = setInterval(next, DELAY); }
+  function stop(){ clearInterval(interval); }
+  function restart(){ stop(); start(); }
+
+  nextBtn.addEventListener("click", () => { next(); restart(); });
+  prevBtn.addEventListener("click", () => { prev(); restart(); });
+
+  carousel.addEventListener("mouseenter", stop);
+  carousel.addEventListener("mouseleave", start);
+
+  start();
+})();
+</script>
+    
+
+
+</body>
+</html>
